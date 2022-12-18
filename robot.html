@@ -39,8 +39,9 @@
         <details id="menu">
             <summary>＋</summary>
             <ul>
-                <li id="book">本検索</li>
-                <li>選択肢２</li>
+                <li id="book">本の検索</li>
+                <li>実装予定①</li>
+                <li>実装予定②</li>
             </ul>
         </details>
         <textarea name="" id="input" cols="" rows="1"></textarea>
@@ -122,6 +123,7 @@
                 user.providerData.forEach((profile) => {
                     // ログイン情報の取得
                     $("#name").html(profile.displayName);
+                    console.log(profile.displayName);
                     // console.log("Sign-in provider: " + profile.providerId);
                     // console.log("  Provider-specific UID: " + profile.uid);
                     // console.log("  Email: " + profile.email);
@@ -133,7 +135,7 @@
             _redirect();
         };
 
-        // データ送信
+        // データ送信（送信ボタン）
         $("#send").on('click', function(){
             // 現在時刻の取得（new Date()をそのままmsgに突っ込むと反応なかった）
             const now = new Date();
@@ -154,6 +156,37 @@
             };
             const newPostRef = push(dbRef);
             set(newPostRef, msg);
+            // 送信後に文字消去
+            $("#input").val("");
+        });
+
+
+        $("#input").on("keydown", function (e) {
+            // console.log(e.keyCode);
+            // keyCode:13がEnterキーを表す（日本語の変換を確定するEnterは#229）
+            if(e.keyCode === 13){
+                // 現在時刻の取得（new Date()をそのままmsgに突っ込むと反応なかった）
+                const now = new Date();
+                // 曜日の文字列を設定
+                const youbi = ["日","月","火","水","木","金","土"];
+                const msg = {
+                    text: $("#input").val(),
+                    date: {
+                        year: now.getFullYear(),
+                        month: now.getMonth()+1,
+                        date: now.getDate(),
+                        // 曜日は日曜日開始で0から表現される
+                        weekday: youbi[now.getDay()],
+                        hour: now.getHours(),
+                        minute: ('0'+ now.getMinutes()).slice(-2),
+                        second: now.getSeconds()
+                    }
+                };
+                const newPostRef = push(dbRef);
+                set(newPostRef, msg);
+                // 送信後に文字消去
+                $("#input").val("");
+            };
         });
 
 
@@ -265,7 +298,7 @@
         const html =
             `<li class=liLeft>
                 <div class=leftMsg>
-                    希望する書籍の関連用語を入力戴けますと幸甚に存じます。<br>
+                    読みたい本のキーワードを入力してください！<br>
                     <input type="text" id="bookWord" placeholder="本の検索" required>
                     <button type="submit" id="searchBook">検索！</button>
                 </div>
@@ -293,7 +326,7 @@
                 // console.log(bookList(items));
             
                 $("#output").append(
-                    "<li class=liLeft><div class=leftMsg>以下の書籍は如何でしょうか。<ul class=BList>" 
+                    "<li class=liLeft><div class=leftMsg>以下の本はいかがでしょうか？<ul class=BList>" 
                         + bookList(items)
                         + "</ul></div></li>"
                     );

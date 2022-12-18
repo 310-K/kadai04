@@ -102,6 +102,23 @@ header details ul li {
     }
 
     /* 本検索メッセージ */
+    #bookWord {
+        border: solid #fff 1px;
+        border-radius: 15px 0 0 15px;
+        padding: 5px 10px;
+        margin-top: 10px;
+        font-size: 15px;
+    }
+    #searchBook{
+        font-size: 15px;
+        font-family: 'Open Sans', 'Kosugi Maru', sans-serif;
+        border-radius: 0px 15px 15px 0px;
+        background-color: #ffd683;
+        border: solid #fff 3px;
+        margin-left: 5px;
+        padding: 2px 5px;
+    }
+
     .BList {
         margin-top: 5px;
         margin-left: 20px;
@@ -124,7 +141,7 @@ header details ul li {
 }
 
 #name {
-    color: #fff;
+    color: #f25c00;
     background-color: #f25c00;
     padding: 5px;
     /* display: none; */
@@ -159,7 +176,7 @@ header details ul li {
         background-color: #f7efe2;
         position: absolute;
         left: -5px;
-        bottom: 55px;
+        bottom: 63px;
         border-radius: 10px;
     }
 

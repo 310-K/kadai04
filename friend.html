@@ -181,7 +181,7 @@
         const html =
             `<li class=liLeft>
                 <div class=leftMsg>
-                    希望する書籍の関連用語を入力戴けますと幸甚に存じます。<br>
+                    読みたい本のキーワードを入力してください！<br>
                     <input type="text" id="bookWord" placeholder="本の検索" required>
                     <button type="submit" id="searchBook">検索！</button>
                 </div>
@@ -209,7 +209,7 @@
                 // console.log(bookList(items));
             
                 $("#output").append(
-                    "<li class=liLeft><div class=leftMsg>以下の書籍は如何でしょうか。<ul class=BList>" 
+                    "<li class=liLeft><div class=leftMsg>以下の本はいかがでしょうか？<ul class=BList>" 
                         + bookList(items)
                         + "</ul></div></li>"
                     );
