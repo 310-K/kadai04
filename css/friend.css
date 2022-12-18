@@ -1,0 +1,192 @@
+@charset "utf-8";
+
+body {
+    font-family: 'Open Sans', 'Kosugi Maru', sans-serif;
+    font-size: 18px;
+    max-height: 100vh;
+}
+
+a {
+    text-decoration: none;
+    color: #fff;
+  }
+
+/* header */
+header {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 80px;
+    background-color: #f25c00;
+    color: #fff;
+    text-align: center;
+}
+
+header h1 {
+    margin-left: 10px;
+    font-size: 30px;
+}
+
+header details {
+    font-size: 20px;
+    position: relative;
+}
+
+header details ul {
+    position: absolute;
+    top: 50px;
+    right: -35px;
+    width: 110px;
+    background-color: #f28d00;
+    border-radius: 10px;
+    text-align: center;
+}
+
+header details ul li {
+    display: block;
+    margin: 15px 10px;
+}
+
+/* -----header */
+
+
+/* メッセージ表示箇所 */
+#output {
+    width: 100vw;
+    height: calc(100vh - 170px);
+    overflow: scroll;
+}
+
+#output li{
+    margin: 10px 0;
+}
+
+    /* メッセージCSS */
+
+    .userName {
+        text-align: left;
+        margin-left: 10px;
+        font-size: 16px;
+    }
+
+    /* #output li:first-child div {
+        margin-top: 10px;
+    } */
+
+    .liRight {
+        text-align: right;
+    }
+    .liLeft {
+        text-align-last: left;
+    }
+    .rightMsg {
+        display: inline-block;
+        padding: 10px 10px;
+        margin: 5px 10px;
+        max-width: 70vw;
+        background-color: #f25c00;
+        color: #fff;
+        border-radius: 20px;
+    }
+
+    .leftMsg {
+        display: inline-block;
+        padding: 10px 10px;
+        margin: 5px 10px;
+        max-width: 70vw;
+        background-color: #f9a603;
+        /* color: #fff; */
+        border-radius: 20px;
+    }
+
+    .time {
+        margin: 0 10px;
+        font-size: 14px;
+    }
+
+    /* 本検索メッセージ */
+    .BList {
+        margin-top: 5px;
+        margin-left: 20px;
+        /* リストの黒丸表示 */
+        list-style-type: disc;
+    }
+    .BList li {
+        padding: 5px 0;
+    }
+    /* ----本検索メッセージ */
+
+
+/* ----メッセージ表示箇所 */
+
+
+/* 送信部分 */
+
+#send-area {
+    height: 90px;
+    display: flex;
+    align-items: flex-start;
+    align-items: center;
+    background-color: #f25c00;
+}
+    /* メニュー部分 */
+    #menu {
+        margin-left: 10px;
+        position: relative;
+    }
+
+    #menu summary {
+        display: block;
+        padding: 2px;
+        border-radius: 50%;
+        border:solid #fff 1px;
+        font-size: 23px;
+        color: #fff;
+    }
+    #menu summary::-webkit-details-marker {
+        display: none;
+    }
+
+    #menu ul{
+        background-color: #f7efe2;
+        position: absolute;
+        left: -5px;
+        bottom: 55px;
+        border-radius: 10px;
+    }
+
+    #menu li{
+        display: block;
+        width: 100px;
+        padding: 5px;
+        margin: 5px;
+    }
+    /* ------メニュー部分 */
+
+
+
+#input {
+    width: 250px;
+    border-radius: 20px;
+    margin-left: 10px;
+    padding: 5px 10px;
+    font-size: 18px;
+    border-style: none;
+    /* textareaの拡大縮小禁止 */
+    resize: none;
+}
+
+#send {
+    height: 40px;
+    width: 40px;
+    margin-left: 10px;
+    background-color: #f25c00;
+    border-style: none;
+    border-radius: 50%;
+}
+
+#send img {
+    height: 40px;
+    border-radius: 50%;
+}
+/* -----送信部分 */

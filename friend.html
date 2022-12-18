@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/reset.css">
+    <link rel="stylesheet" href="./css/friend.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <title>時々、ふたりごと</title>
+</head>
+<body>
+<!-- コンテンツ表示画面 -->
+<header>
+    <h1>ともだち</h1>
+    <details>
+        <summary>menu</summary>
+        <ul>
+            <li>
+                <a href="robot.html">ロボット</a>
+            </li>
+            <li>
+                <a href="friend.html">ともだち</a>
+            </li>
+        </ul>
+    </details>
+</header>
+<main>
+
+<!-- output -->
+<ul id="output"></ul>
+<!--/ output -->
+
+<!-- input -->
+
+<!-- 名前入力欄 -->
+<input type="text" id="name" placeholder="名前">
+<!-- /名前入力欄 -->
+
+<div id="send-area">
+    
+    <!-- メニューリスト -->
+    <details id="menu">
+        <summary>＋</summary>
+        <ul>
+            <li id="book">本検索</li>
+            <li>選択肢２</li>
+        </ul>
+    </details>
+    <!--/ メニューリスト -->
+
+    <!-- テキスト入力欄 -->
+    <textarea name="" id="input" cols="" rows="1"></textarea>
+    <!--/ テキスト入力欄 -->
+
+    <!-- 送信ボタン -->
+    <button id="send">
+        <img src="./imgs/send-btn.jpg" alt="送信ボタン">
+    </button>
+    <!--/ 送信ボタン -->
+</div>
+<!--/ input -->
+
+</main>
+<footer>
+
+</footer>
+
+<!-- /コンテンツ表示画面 -->
+
+<!-- jquery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<!-- 以下firebase -->
+<script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+
+    
+    // Realtime DatabaseのSDK
+    import { getDatabase, ref, push, set, onChildAdded, remove, onChildRemoved }
+        from "https://cdnjs.cloudflare.com/ajax/libs/firebase/9.15.0/firebase-database.js";
+  
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyAvCxTiSAwgwuapb9cX8FSBpy_ksd426Fg",
+      authDomain: "js04kadai.firebaseapp.com",
+      projectId: "js04kadai",
+      storageBucket: "js04kadai.appspot.com",
+      messagingSenderId: "591240950937",
+      appId: "1:591240950937:web:f8c3d6a697729633c4f408"
+    };
+  
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    // RealtimeDatabase用のセットアップ
+    const db = getDatabase(app); // Realtime DBに接続
+    const dbRef = ref(db, "friend"); // Realtime DB内のアプリ js04 を使う
+
+    // 送信ボタン
+    $("#send").on('click', function(){
+        // 現在時刻の取得（new Date()をそのままmsgに突っ込むと反応なかった）
+        const now = new Date();
+        // 曜日の文字列を設定
+        const youbi = ["日","月","火","水","木","金","土"];
+        const msg = {
+            name: $("#name").val(),
+            text: $("#input").val(),
+            date: {
+                year: now.getFullYear(),
+                month: now.getMonth()+1,
+                date: now.getDate(),
+                // 曜日は日曜日開始で0から表現される
+                weekday: youbi[now.getDay()],
+                hour: now.getHours(),
+                minute: ('0'+ now.getMinutes()).slice(-2),
+                second: now.getSeconds()
+            }
+        };
+        console.log(msg.date);
+        const newPostRef = push(dbRef);
+        set(newPostRef, msg);
+        // 送信後に文字消去
+        $("#input").val("");
+    });
+
+    $("#input").on("keydown", function (e) {
+        // console.log(e.keyCode);
+        // keyCode:13がEnterキーを表す（日本語の変換を確定するEnterは#229）
+        if(e.keyCode === 13){
+             // 現在時刻の取得（new Date()をそのままmsgに突っ込むと反応なかった）
+            const now = new Date();
+            // 曜日の文字列を設定
+            const youbi = ["日","月","火","水","木","金","土"];
+            const msg = {
+                name: $("#name").val(),
+                text: $("#input").val(),
+                date: {
+                    year: now.getFullYear(),
+                    month: now.getMonth()+1,
+                    date: now.getDate(),
+                    // 曜日は日曜日開始で0から表現される
+                    weekday: youbi[now.getDay()],
+                    hour: now.getHours(),
+                    minute: ('0'+ now.getMinutes()).slice(-2),
+                    second: now.getSeconds()
+                }
+            };
+            console.log(msg.date);
+            const newPostRef = push(dbRef);
+            set(newPostRef, msg);
+            // 送信後に文字消去
+            $("#input").val("");
+        }
+    })
+
+    onChildAdded(dbRef, function(data){
+        const msg = data.val();
+        console.log(msg);
+        // const msgElement = `<li class=liRight><div class=rightMsg>${msg.text}</div><p class=time>${msg.date.hour}:${msg.date.minute}</p></li>`;
+
+
+        const msgElement = "";
+        if(msg.name == $("#name").val()){
+            const msgElement = `<li class=liRight><div class=rightMsg>${msg.text}</div><p class=time>${msg.date.hour}:${msg.date.minute}</p></li>`;
+            $("#output").append(msgElement);
+        }
+        else{
+            const msgElement = `<li class=liLeft><p class=userName>${msg.name}</p><div class=leftMsg>${msg.text}</div><p class=time>${msg.date.hour}:${msg.date.minute}</p></li>`;
+            $("#output").append(msgElement);
+        }
+
+        // 自動スクロール
+        $("#output")[0].scrollTop = $("#output")[0].scrollHeight;
+    });
+
+    $("#book").on('click', function(){
+        // 本の検索メッセージ表示
+        const html =
+            `<li class=liLeft>
+                <div class=leftMsg>
+                    希望する書籍の関連用語を入力戴けますと幸甚に存じます。<br>
+                    <input type="text" id="bookWord" placeholder="本の検索" required>
+                    <button type="submit" id="searchBook">検索！</button>
+                </div>
+            </li>`;
+        $("#output").append(html);
+        // ---------本の検索メッセージ表示
+
+        // 検索ボタンが押された時の挙動も、検索ボタン自体が出現する挙動に追記しないといけない！
+        // 本の検索ボタンの挙動
+        $("#searchBook").on('click', function(){
+            // 検索ワードの取得
+            const keyWord = $("#bookWord").val();
+            // console.log(keyWord);
+            // Google Books APIで検索・データ取得
+            $.get(`https://www.googleapis.com/books/v1/volumes?q=${keyWord}`, function (data) {
+                let items = data.items;
+                console.log(items);
+                function bookList(books){
+                    let list ="";
+                    for(let i = 0; i < books.length; i++){
+                        list += `<li>${books[i].volumeInfo.title}(${books[i].volumeInfo.authors}, ${books[i].volumeInfo.publisher})</li>`;
+                    };
+                    return list;
+                };
+                // console.log(bookList(items));
+            
+                $("#output").append(
+                    "<li class=liLeft><div class=leftMsg>以下の書籍は如何でしょうか。<ul class=BList>" 
+                        + bookList(items)
+                        + "</ul></div></li>"
+                    );
+            });
+        });
+        // ---------本の検索ボタンの挙動
+
+    });
+
+
+  </script>
+
+</body>
+</html>

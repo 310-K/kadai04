@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/reset.css">
+    <!-- <link rel="stylesheet" href="./css/friend.css"> -->
+    <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <title>時々、ふたりごと</title>
+</head>
+<body>
+    <header></header>
+    <main>
+        <h1>認証機能の実装</h1>
+
+        <p>-----</p>
+        <button id="login">ログイン</button>
+        <p>-----</p>
+
+
+        <h2>新規作成</h2>
+        <p>ユーザー名</p>
+        <input type="text" id="user">
+        <p>メールアドレス</p>
+        <input type="text" id="n-email">
+        <p>パスワード</p>
+        <input type="text" id="n-password">
+        <button id="creation">新規作成</button>
+
+        <p>-----</p>
+
+        <h2>サインイン</h2>
+        <p>メールアドレス</p>
+        <input type="text" id="email">
+        <p>パスワード</p>
+        <input type="text" id="password">
+    </main>
+    <footer></footer>
+
+
+
+<!-- jquery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<!-- 以下firebase -->
+<script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+
+    // AuthenticationのSDK
+    // import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut }
+    //     from "https://cdnjs.cloudflare.com/ajax/libs/firebase/9.15.0/firebase-auth.js"
+    import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut }
+        from "https://cdnjs.cloudflare.com/ajax/libs/firebase/9.15.0/firebase-auth.js"
+
+    // Realtime DatabaseのSDK
+    import { getDatabase, ref, push, set, onChildAdded, remove, onChildRemoved }
+        from "https://cdnjs.cloudflare.com/ajax/libs/firebase/9.15.0/firebase-database.js";
+  
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyAvCxTiSAwgwuapb9cX8FSBpy_ksd426Fg",
+      authDomain: "js04kadai.firebaseapp.com",
+      projectId: "js04kadai",
+      storageBucket: "js04kadai.appspot.com",
+      messagingSenderId: "591240950937",
+      appId: "1:591240950937:web:f8c3d6a697729633c4f408"
+    };
+  
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+
+    // Authentication（Google認証）のセットアップ
+    const provider = new GoogleAuthProvider();
+    provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
+    const auth = getAuth();
+
+    // Login処理
+    $("#login").on('click', function(){
+        // Google認証完了後の処理
+        signInWithPopup(auth, provider).then((result) => {
+            // ログイン後のページ遷移（href以降に遷移先を記入）
+            location.href="robot.html";
+        }).catch((error) => {
+            // Handle errors here.
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            // The email of the user's account used.
+            const email = error.email;
+            // The AuthCredential type that was used.
+            const credential = GoogleAuthProvider.credentialFormError(error);
+            // ...
+        });
+
+    });
+
+
+    // $("#creation").on('click', function(){
+    //     const user = $("#user").val();
+    //     const email = $("#n-email").val();
+    //     const password = $("#n-password").val();
+    //     console.log(email);
+
+        // パスワードベースのアカウントを作成＝アカウント新規登録
+    //     createUserWithEmailAndPassword(auth, email, password)
+    //     .then((userCredential) => {
+    //         // Signed in 
+    //         const user = userCredential.user;
+    //         console.log(user);
+    //         // ...
+    //     })
+    //     .catch((error) => {
+    //         const errorCode = error.code;
+    //         const errorMessage = error.message;
+    //         if(errorCode == "auth/invalid-email"){
+    //             alert("メールアドレスの形式が不正です")
+    //         };
+    //         // ..
+    //     });
+
+        // createUserWithEmailAndPassword(auth, email, password).catch(function(error) {
+        //         var errorCode = error.code;
+        //         var errorMessage = error.message;
+        //         if(errorCode == "auth/invalid-email"){
+        //             alert("メールアドレスの形式が不正です")
+        //         }
+        //     }).then(function(user) {
+        //         console.log(user);
+        //     });
+    // })
+
+
+    
+    
+
+
+    // メールアドレスとパスワードでサインイン
+    // signInWithEmailAndPassword(auth, email, password)
+    // .then((userCredential) => {
+    //     // Signed in 
+    //     const user = userCredential.user;
+    //     // ...
+    // })
+    // .catch((error) => {
+    //     const errorCode = error.code;
+    //     const errorMessage = error.message;
+    // });
+
+
+
+
+    // RealtimeDatabase用のセットアップ
+    const db = getDatabase(app); // Realtime DBに接続
+    const dbRef = ref(db, "friend"); // Realtime DB内のアプリ js04 を使う
+
+</script>
+
+
+</body>
+</html>
