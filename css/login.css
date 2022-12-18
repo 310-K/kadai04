@@ -1,0 +1,45 @@
+@charset "utf-8";
+
+body {
+    font-family: 'Open Sans', 'Kosugi Maru', sans-serif;
+    font-size: 18px;
+    max-height: 100vh;
+    background-color: #f25c00;
+    color: #fff;
+}
+
+#wrapper {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+#content {
+    text-align: center;
+}
+
+h1 {
+    font-size: 28px;
+    padding: 10px;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+#login {
+    font-family: 'Open Sans', 'Kosugi Maru', sans-serif;
+    font-size: 23px;
+    font-weight: bold;
+    background-color: #fff;
+    color: #f25c00;
+    border: solid #fff 1px;
+    border-radius: 30px;
+    padding: 5px 15px;
+}
+
+#login:active {
+    background-color: #f25c00;
+    color: #fff;
+}
+
