@@ -22,6 +22,7 @@
             <li>
                 <a href="friend.html">ともだち</a>
             </li>
+            <li id="logout">ログアウト</li>
         </ul>
     </details>
 </header>
@@ -33,7 +34,7 @@
 
 <!-- input -->
 <div id="send-wrapper">
-    <div id="name">名前：</div>
+    <div id="name"></div>
     <div id="send-area">
         <details id="menu">
             <summary>＋</summary>
@@ -78,7 +79,7 @@
 
     // Your web app's Firebase configuration
     const firebaseConfig = {
-      apiKey: "",
+      apiKey: "AIzaSyAvCxTiSAwgwuapb9cX8FSBpy_ksd426Fg",
       authDomain: "js04kadai.firebaseapp.com",
       projectId: "js04kadai",
       storageBucket: "js04kadai.appspot.com",
@@ -97,7 +98,8 @@
 
     // RealtimeDatabase用のセットアップ
     const db = getDatabase(app); // Realtime DBに接続
-    const dbRef = ref(db, "robot"); // Realtime DB内のアプリ js04 を使う
+    // const dbRef = ref(db, "robot"); 
+        // Realtime DB内のアプリ js04 を使う
     // ＝＝＝＝＝＝RealtimeDatabase用のセットアップ
 
 
@@ -106,17 +108,20 @@
 
     // loginしていれば可能な処理
     onAuthStateChanged(auth, (user) => {
+        const uid = user.uid;
+        const dbRef = ref(db, "users/"+uid+"/robot/");
+
         // ユーザー（誰？）の取得
         if (user) {
             // User is signed in, see docs for a list of available properties
             // https://firebase.google.com/docs/reference/js/firebase.User
-            const uid = user.uid;
+            // const uid = user.uid;
             
             // 以下、ユーザー情報の取得
             if (user !== null) {
                 user.providerData.forEach((profile) => {
                     // ログイン情報の取得
-                    $("#name").append(profile.displayName);
+                    $("#name").html(profile.displayName);
                     // console.log("Sign-in provider: " + profile.providerId);
                     // console.log("  Provider-specific UID: " + profile.uid);
                     // console.log("  Email: " + profile.email);
@@ -126,63 +131,15 @@
         } else {
             // User is signed out
             _redirect();
-        }
+        };
 
         // データ送信
-
-
-    });
-
-    // サインアウトしたらログイン画面に戻るように設定
-    function _redirect(){
-        location.href="login.html";
-    }
-
-
-
-
-
-    // ＝＝＝＝＝＝Auth関連処理＝＝＝＝＝＝＝
-
-
-
-    // 送信ボタン
-    $("#send").on('click', function(){
-        // 現在時刻の取得（new Date()をそのままmsgに突っ込むと反応なかった）
-         const now = new Date();
-        // 曜日の文字列を設定
-        const youbi = ["日","月","火","水","木","金","土"];
-        const msg = {
-            name: $("#name").val(),
-            text: $("#input").val(),
-            date: {
-                year: now.getFullYear(),
-                month: now.getMonth()+1,
-                date: now.getDate(),
-                // 曜日は日曜日開始で0から表現される
-                weekday: youbi[now.getDay()],
-                hour: now.getHours(),
-                minute: ('0'+ now.getMinutes()).slice(-2),
-                second: now.getSeconds()
-            }
-        };
-        console.log(msg.date);
-        const newPostRef = push(dbRef);
-        set(newPostRef, msg);
-        // 送信後に文字消去
-        $("#input").val("");
-    });
-
-    $("#input").on("keydown", function (e) {
-        // console.log(e.keyCode);
-        // keyCode:13がEnterキーを表す（日本語の変換を確定するEnterは#229）
-        if(e.keyCode === 13){
+        $("#send").on('click', function(){
             // 現在時刻の取得（new Date()をそのままmsgに突っ込むと反応なかった）
             const now = new Date();
             // 曜日の文字列を設定
             const youbi = ["日","月","火","水","木","金","土"];
             const msg = {
-                name: $("#name").val(),
                 text: $("#input").val(),
                 date: {
                     year: now.getFullYear(),
@@ -195,23 +152,113 @@
                     second: now.getSeconds()
                 }
             };
-            console.log(msg.date);
             const newPostRef = push(dbRef);
             set(newPostRef, msg);
-            // 送信後に文字消去
-            $("#input").val("");
-        }
-    })
+        });
 
-    onChildAdded(dbRef, function(data){
-        const msg = data.val();
-        console.log(msg);
-        const msgElement = `<li class=liRight><div class=rightMsg>${msg.text}</div><p class=time>${msg.date.hour}:${msg.date.minute}</p></li>`;
-        $("#output").append(msgElement);
 
-        // 自動スクロール
-        $("#output")[0].scrollTop = $("#output")[0].scrollHeight;
+        onChildAdded(dbRef, function(data){
+            const msg = data.val();
+            console.log(msg);
+            const msgElement = `<li class=liRight><div class=rightMsg>${msg.text}</div><p class=time>${msg.date.month}/${msg.date.date}　${msg.date.hour}:${msg.date.minute}</p></li>`;
+            $("#output").append(msgElement);
+
+            // 自動スクロール
+            $("#output")[0].scrollTop = $("#output")[0].scrollHeight;
+        });
+
     });
+
+    
+    // ログアウト
+    $("#logout").on('click', function(){
+        signOut(auth).then(() => {
+            // Sign-out successful.
+            _redirect();
+        }).catch((error) => {
+            // An error happened.
+            console.error(error);
+        });
+    });
+
+    // ログイン画面に戻る関数（リダイレクト設定）
+    function _redirect(){
+        location.href="login.html";
+    };
+
+
+    // ＝＝＝＝＝＝Auth関連処理＝＝＝＝＝＝＝
+
+
+
+    // 送信ボタン
+    // $("#send").on('click', function(){
+    //     // 現在時刻の取得（new Date()をそのままmsgに突っ込むと反応なかった）
+    //     const now = new Date();
+    //     // 曜日の文字列を設定
+    //     const youbi = ["日","月","火","水","木","金","土"];
+    //     const msg = {
+    //         name: $("#name").val(),
+    //         text: $("#input").val(),
+    //         date: {
+    //             year: now.getFullYear(),
+    //             month: now.getMonth()+1,
+    //             date: now.getDate(),
+    //             // 曜日は日曜日開始で0から表現される
+    //             weekday: youbi[now.getDay()],
+    //             hour: now.getHours(),
+    //             minute: ('0'+ now.getMinutes()).slice(-2),
+    //             second: now.getSeconds()
+    //         }
+    //     };
+    //     console.log(msg.date);
+    //     const newPostRef = push(dbRef);
+    //     set(newPostRef, msg);
+    //     // 送信後に文字消去
+    //     $("#input").val("");
+    // });
+
+    // $("#input").on("keydown", function (e) {
+    //     // console.log(e.keyCode);
+    //     // keyCode:13がEnterキーを表す（日本語の変換を確定するEnterは#229）
+    //     if(e.keyCode === 13){
+    //         // 現在時刻の取得（new Date()をそのままmsgに突っ込むと反応なかった）
+    //         const now = new Date();
+    //         // 曜日の文字列を設定
+    //         const youbi = ["日","月","火","水","木","金","土"];
+    //         const msg = {
+    //             name: $("#name").val(),
+    //             text: $("#input").val(),
+    //             date: {
+    //                 year: now.getFullYear(),
+    //                 month: now.getMonth()+1,
+    //                 date: now.getDate(),
+    //                 // 曜日は日曜日開始で0から表現される
+    //                 weekday: youbi[now.getDay()],
+    //                 hour: now.getHours(),
+    //                 minute: ('0'+ now.getMinutes()).slice(-2),
+    //                 second: now.getSeconds()
+    //             }
+    //         };
+    //         console.log(msg.date);
+    //         const newPostRef = push(dbRef);
+    //         set(newPostRef, msg);
+    //         // 送信後に文字消去
+    //         $("#input").val("");
+    //     }
+    // })
+
+    // onChildAdded(dbRef, function(data){
+    //     const msg = data.val();
+    //     console.log(msg);
+    //     const msgElement = `<li class=liRight><div class=rightMsg>${msg.text}</div><p class=time>${msg.date.hour}:${msg.date.minute}</p></li>`;
+    //     $("#output").append(msgElement);
+
+    //     // 自動スクロール
+    //     $("#output")[0].scrollTop = $("#output")[0].scrollHeight;
+    // });
+
+    
 
     $("#book").on('click', function(){
         // 本の検索メッセージ表示
@@ -239,7 +286,7 @@
                 function bookList(books){
                     let list ="";
                     for(let i = 0; i < books.length; i++){
-                        list += `<li>${books[i].volumeInfo.title}(${books[i].volumeInfo.authors}, ${books[i].volumeInfo.publisher})</li>`;
+                        list += `<li>${books[i].volumeInfo.title}(${books[i].volumeInfo.authors})</li>`;
                     };
                     return list;
                 };

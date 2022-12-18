@@ -36,7 +36,7 @@ header details ul {
     position: absolute;
     top: 50px;
     right: -35px;
-    width: 110px;
+    width: 130px;
     background-color: #f28d00;
     border-radius: 10px;
     text-align: center;
@@ -45,6 +45,10 @@ header details ul {
 header details ul li {
     display: block;
     margin: 15px 10px;
+}
+
+#logout {
+    border-bottom: solid #fff 2px;
 }
 
 /* -----header */
