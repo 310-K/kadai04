@@ -13,15 +13,15 @@
 <body>
 <!-- コンテンツ表示画面 -->
 <header>
-    <h1>ともだち</h1>
+    <h1>ともだちたち</h1>
     <details>
         <summary>menu</summary>
         <ul>
             <li>
-                <a href="robot.html">ロボット</a>
+                <a href="robot.html">ひとりごと</a>
             </li>
             <li>
-                <a href="friend.html">ともだち</a>
+                <a href="friend.html">ともだちたち</a>
             </li>
             <li id="logout">ログアウト</li>
         </ul>
@@ -36,6 +36,7 @@
 <!-- input -->
 <div id="send-wrapper">
     <div id="name">名前</div>
+    <div id="userId"></div>
     <div id="send-area">
         <details id="menu">
             <summary>＋</summary>
@@ -100,11 +101,15 @@
     // TODO: Add SDKs for Firebase products that you want to use
     // https://firebase.google.com/docs/web/setup#available-libraries
 
-    
+    // AuthenticationのSDK
+    import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut }
+        from "https://cdnjs.cloudflare.com/ajax/libs/firebase/9.15.0/firebase-auth.js"
+
     // Realtime DatabaseのSDK
     import { getDatabase, ref, push, set, onChildAdded, remove, onChildRemoved }
         from "https://cdnjs.cloudflare.com/ajax/libs/firebase/9.15.0/firebase-database.js";
   
+
     // Your web app's Firebase configuration
     const firebaseConfig = {
       apiKey: "AIzaSyAvCxTiSAwgwuapb9cX8FSBpy_ksd426Fg",
@@ -114,50 +119,62 @@
       messagingSenderId: "591240950937",
       appId: "1:591240950937:web:f8c3d6a697729633c4f408"
     };
-  
     // Initialize Firebase
     const app = initializeApp(firebaseConfig);
+
+    // Authentication（Google認証）のセットアップ
+    const provider = new GoogleAuthProvider();
+    provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
+    const auth = getAuth();
+    // ＝＝＝＝＝＝Authentication（Google認証）のセットアップ
+
+
     // RealtimeDatabase用のセットアップ
     const db = getDatabase(app); // Realtime DBに接続
-    const dbRef = ref(db, "friend"); // Realtime DB内のアプリ js04 を使う
+    const dbRef = ref(db, "users/chat"); 
+        // Realtime DB内のアプリ js04 を使う
+    // ＝＝＝＝＝＝RealtimeDatabase用のセットアップ
 
-    // 送信ボタン
-    $("#send").on('click', function(){
-        // 現在時刻の取得（new Date()をそのままmsgに突っ込むと反応なかった）
-        const now = new Date();
-        // 曜日の文字列を設定
-        const youbi = ["日","月","火","水","木","金","土"];
-        const msg = {
-            name: $("#name").val(),
-            text: $("#input").val(),
-            date: {
-                year: now.getFullYear(),
-                month: now.getMonth()+1,
-                date: now.getDate(),
-                // 曜日は日曜日開始で0から表現される
-                weekday: youbi[now.getDay()],
-                hour: now.getHours(),
-                minute: ('0'+ now.getMinutes()).slice(-2),
-                second: now.getSeconds()
-            }
+    // ＝＝＝＝＝＝Auth関連処理＝＝＝＝＝＝＝
+
+    // loginしていれば可能な処理
+    onAuthStateChanged(auth, (user) => {
+        const uid = user.uid;
+        // const dbRef = ref(db, "users/"+uid+"/robot/");
+
+        // ユーザー（誰？）の取得
+        if (user) {
+            // User is signed in, see docs for a list of available properties
+            // https://firebase.google.com/docs/reference/js/firebase.User
+            // const uid = user.uid;
+            
+            // 以下、ユーザー情報の取得
+            if (user !== null) {
+                user.providerData.forEach((profile) => {
+                    // ログイン情報の取得
+                    $("#name").html(profile.displayName);
+                    $("#userId").html(uid);
+                    console.log(profile.displayName);
+                    // console.log("Sign-in provider: " + profile.providerId);
+                    // console.log("  Provider-specific UID: " + profile.uid);
+                    // console.log("  Email: " + profile.email);
+                    // console.log("  Photo URL: " + profile.photoURL);
+                });
+            };
+        } else {
+            // User is signed out
+            _redirect();
         };
-        console.log(msg.date);
-        const newPostRef = push(dbRef);
-        set(newPostRef, msg);
-        // 送信後に文字消去
-        $("#input").val("");
-    });
 
-    $("#input").on("keydown", function (e) {
-        // console.log(e.keyCode);
-        // keyCode:13がEnterキーを表す（日本語の変換を確定するEnterは#229）
-        if(e.keyCode === 13){
-             // 現在時刻の取得（new Date()をそのままmsgに突っ込むと反応なかった）
+        // データ送信（送信ボタン）
+        $("#send").on('click', function(){
+            // 現在時刻の取得（new Date()をそのままmsgに突っ込むと反応なかった）
             const now = new Date();
             // 曜日の文字列を設定
             const youbi = ["日","月","火","水","木","金","土"];
             const msg = {
-                name: $("#name").val(),
+                id: uid,
+                name: $("#name").text(),
                 text: $("#input").val(),
                 date: {
                     year: now.getFullYear(),
@@ -166,37 +183,96 @@
                     // 曜日は日曜日開始で0から表現される
                     weekday: youbi[now.getDay()],
                     hour: now.getHours(),
+                    // 分は必ず二桁になるように設定
                     minute: ('0'+ now.getMinutes()).slice(-2),
                     second: now.getSeconds()
                 }
             };
-            console.log(msg.date);
             const newPostRef = push(dbRef);
             set(newPostRef, msg);
             // 送信後に文字消去
             $("#input").val("");
-        }
-    })
-
-    onChildAdded(dbRef, function(data){
-        const msg = data.val();
-        console.log(msg);
-        // const msgElement = `<li class=liRight><div class=rightMsg>${msg.text}</div><p class=time>${msg.date.hour}:${msg.date.minute}</p></li>`;
+        });
 
 
-        const msgElement = "";
-        if(msg.name == $("#name").val()){
-            const msgElement = `<li class=liRight><div class=rightMsg>${msg.text}</div><p class=time>${msg.date.hour}:${msg.date.minute}</p></li>`;
-            $("#output").append(msgElement);
-        }
-        else{
-            const msgElement = `<li class=liLeft><p class=userName>${msg.name}</p><div class=leftMsg>${msg.text}</div><p class=time>${msg.date.hour}:${msg.date.minute}</p></li>`;
-            $("#output").append(msgElement);
-        }
+        $("#input").on("keydown", function (e) {
+            // console.log(e.keyCode);
+            // keyCode:13がEnterキーを表す（日本語の変換を確定するEnterは#229）
+            if(e.keyCode === 13){
+                // 現在時刻の取得（new Date()をそのままmsgに突っ込むと反応なかった）
+                const now = new Date();
+                // 曜日の文字列を設定
+                const youbi = ["日","月","火","水","木","金","土"];
+                const msg = {
+                    id: uid,
+                    name: $("#name").text(),
+                    text: $("#input").val(),
+                    date: {
+                        year: now.getFullYear(),
+                        month: now.getMonth()+1,
+                        date: now.getDate(),
+                        // 曜日は日曜日開始で0から表現される
+                        weekday: youbi[now.getDay()],
+                        hour: now.getHours(),
+                        minute: ('0'+ now.getMinutes()).slice(-2),
+                        second: now.getSeconds()
+                    }
+                };
+                const newPostRef = push(dbRef);
+                set(newPostRef, msg);
+                // 送信後に文字消去
+                $("#input").val("");
+            };
+        });
 
-        // 自動スクロール
-        $("#output")[0].scrollTop = $("#output")[0].scrollHeight;
+
+        onChildAdded(dbRef, function(data){
+            const msg = data.val();
+            console.log(msg);
+            const msgElement ="";
+            // console.log($("#userId").text());
+            if(msg.id == $("#userId").text()){
+                // const msgElement = `<p class=userName>${msg.uname}</p><p class=right_balloon>${msg.text}</p>`;
+                // const msgElement = `<div class=myBalloon><p class=userName>${msg.uname}<img src=${msg.icon} class=outputIcon></p><p class=right_balloon>${msg.text}</p></div>`;
+                const msgElement = `<li class=liRight><div class=rightMsg>${msg.text}</div><p class=time>${msg.date.month}/${msg.date.date}　${msg.date.hour}:${msg.date.minute}</p></li>`;
+                $("#output").append(msgElement);
+            }else{
+                const msgElement = `<li class=liLeft><div class=userName>${msg.name}</div><div class=leftMsg>${msg.text}</div><p class=time>${msg.date.month}/${msg.date.date}　${msg.date.hour}:${msg.date.minute}</p></li>`;
+                $("#output").append(msgElement);
+            }
+
+
+            // const msgElement = `<li class=liRight><div class=rightMsg>${msg.text}</div><p class=time>${msg.date.month}/${msg.date.date}　${msg.date.hour}:${msg.date.minute}</p></li>`;
+            // $("#output").append(msgElement);
+
+            // 自動スクロール
+            $("#output")[0].scrollTop = $("#output")[0].scrollHeight;
+        });
+
     });
+
+    
+    // ログアウト
+    $("#logout").on('click', function(){
+        signOut(auth).then(() => {
+            // Sign-out successful.
+            _redirect();
+        }).catch((error) => {
+            // An error happened.
+            console.error(error);
+        });
+    });
+
+    // ログイン画面に戻る関数（リダイレクト設定）
+    function _redirect(){
+        location.href="login.html";
+    };
+
+
+    // ＝＝＝＝＝＝Auth関連処理＝＝＝＝＝＝＝
+
+
+
 
     $("#book").on('click', function(){
         // 本の検索メッセージ表示
@@ -235,6 +311,9 @@
                         + bookList(items)
                         + "</ul></div></li>"
                     );
+
+                // 自動スクロール
+                $("#output")[0].scrollTop = $("#output")[0].scrollHeight;
             });
         });
         // ---------本の検索ボタンの挙動

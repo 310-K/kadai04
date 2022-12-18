@@ -35,8 +35,8 @@ header details {
 header details ul {
     position: absolute;
     top: 50px;
-    right: -35px;
-    width: 130px;
+    right: -31px;
+    width: 150px;
     background-color: #f28d00;
     border-radius: 10px;
     text-align: center;
@@ -48,7 +48,7 @@ header details ul li {
 }
 
 #logout {
-    border-bottom: solid #fff 2px;
+    color: #c10000;
 }
 
 /* -----header */
@@ -62,13 +62,13 @@ header details ul li {
 }
 
 #output li{
-    margin-bottom: 10px;
+    margin: 10px 0px;
 }
 
     /* メッセージCSS */
-    #output li:first-child div {
+    /* #output li:first-child div {
         margin-top: 10px;
-    }
+    } */
 
     .liRight {
         text-align: right;
@@ -144,7 +144,14 @@ header details ul li {
     color: #f25c00;
     background-color: #f25c00;
     padding: 5px;
+    white-space: nowrap; /* 自動改行無し */
+    overflow-x: hidden; /* 横方向のはみ出しは隠れる */
     /* display: none; */
+}
+
+#userId {
+    /* 非表示 */
+    display: none;
 }
 
 #send-area {
