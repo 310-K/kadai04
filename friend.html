@@ -106,7 +106,7 @@
         from "https://cdnjs.cloudflare.com/ajax/libs/firebase/9.15.0/firebase-auth.js"
 
     // Realtime DatabaseのSDK
-    import { getDatabase, ref, push, set, onChildAdded, remove, onChildRemoved }
+    import { getDatabase, ref, push, set, onChildAdded, remove, onChildRemoved, child, update }
         from "https://cdnjs.cloudflare.com/ajax/libs/firebase/9.15.0/firebase-database.js";
   
 
@@ -229,26 +229,34 @@
         onChildAdded(dbRef, function(data){
             const msg = data.val();
             console.log(msg);
+            console.log(data.key);
             const msgElement ="";
             // console.log($("#userId").text());
             if(msg.id == $("#userId").text()){
                 // const msgElement = `<p class=userName>${msg.uname}</p><p class=right_balloon>${msg.text}</p>`;
                 // const msgElement = `<div class=myBalloon><p class=userName>${msg.uname}<img src=${msg.icon} class=outputIcon></p><p class=right_balloon>${msg.text}</p></div>`;
-                const msgElement = `<li class=liRight><div class=rightMsg>${msg.text}</div><p class=time>${msg.date.month}/${msg.date.date}　${msg.date.hour}:${msg.date.minute}</p></li>`;
+
+                const msgElement = `<li class=liRight><div class=rightMsg>${msg.text}</div><p class=time>${msg.date.month}/${msg.date.date}　${msg.date.hour}:${msg.date.minute} <button class="remove">×<div id=msgKey>${data.key}</div></button></p></li>`;
                 $("#output").append(msgElement);
             }else{
                 const msgElement = `<li class=liLeft><div class=userName>${msg.name}</div><div class=leftMsg>${msg.text}</div><p class=time>${msg.date.month}/${msg.date.date}　${msg.date.hour}:${msg.date.minute}</p></li>`;
                 $("#output").append(msgElement);
             }
 
-
-            // const msgElement = `<li class=liRight><div class=rightMsg>${msg.text}</div><p class=time>${msg.date.month}/${msg.date.date}　${msg.date.hour}:${msg.date.minute}</p></li>`;
-            // $("#output").append(msgElement);
-
             // 自動スクロール
             $("#output")[0].scrollTop = $("#output")[0].scrollHeight;
-        });
+        
+            $(".remove").on('click', function(){
+                const son = $(this).children();
+                const text = (son).text();
+                console.log(text);
+                // const deleteDB = (text) => {
+                //     db.ref("users/chat/" + text).remove();
+                // }
+            });
 
+        });
+        
     });
 
     

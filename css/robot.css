@@ -101,6 +101,19 @@ header details ul li {
         font-size: 15px;
     }
 
+    .remove {
+        color: #fff;
+        font-size: 15px;
+        background-color: #f25c00;
+        margin-left: 5px;
+        border-radius: 50%;
+        border:solid #fff 1px;
+    }
+
+    #msgKey {
+        display: none;
+    }
+
     /* 本検索メッセージ */
     #bookWord {
         border: solid #fff 1px;
