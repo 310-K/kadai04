@@ -5,7 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./css/reset.css">
-    <link rel="stylesheet" href="./css/friend.css">
+    <link rel="stylesheet" href="./css/robot.css">
+    <link rel="stylesheet" href="./css/friend2.css">
     <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
     <title>時々、ふたりごと</title>
 </head>
@@ -22,6 +23,7 @@
             <li>
                 <a href="friend.html">ともだち</a>
             </li>
+            <li id="logout">ログアウト</li>
         </ul>
     </details>
 </header>
@@ -32,33 +34,53 @@
 <!--/ output -->
 
 <!-- input -->
+<div id="send-wrapper">
+    <div id="name">名前</div>
+    <div id="send-area">
+        <details id="menu">
+            <summary>＋</summary>
+            <ul>
+                <li id="book">本の検索</li>
+                <li>実装予定①</li>
+                <li>実装予定②</li>
+            </ul>
+        </details>
+        <textarea name="" id="input" cols="" rows="1"></textarea>
+        <button id="send">
+            <img src="./imgs/send-btn.jpg" alt="送信ボタン">
+        </button>
+    </div>
+</div>
 
-<!-- 名前入力欄 -->
-<input type="text" id="name" placeholder="名前">
-<!-- /名前入力欄 -->
 
-<div id="send-area">
+    <!-- 名前入力欄 -->
+        <!-- <input type="text" id="name" placeholder="名前"> -->
+    <!-- /名前入力欄 -->
+
+    <!-- <div id="send-area"> -->
     
     <!-- メニューリスト -->
-    <details id="menu">
-        <summary>＋</summary>
-        <ul>
-            <li id="book">本検索</li>
-            <li>選択肢２</li>
-        </ul>
-    </details>
+        <!-- <details id="menu">
+            <summary>＋</summary>
+            <ul>
+                <li id="book">本検索</li>
+                <li>選択肢２</li>
+            </ul>
+        </details> -->
     <!--/ メニューリスト -->
 
     <!-- テキスト入力欄 -->
-    <textarea name="" id="input" cols="" rows="1"></textarea>
+        <!-- <textarea name="" id="input" cols="" rows="1"></textarea> -->
     <!--/ テキスト入力欄 -->
 
     <!-- 送信ボタン -->
-    <button id="send">
-        <img src="./imgs/send-btn.jpg" alt="送信ボタン">
-    </button>
+        <!-- <button id="send">
+            <img src="./imgs/send-btn.jpg" alt="送信ボタン">
+        </button> -->
     <!--/ 送信ボタン -->
-</div>
+    <!-- </div> -->
+
+
 <!--/ input -->
 
 </main>

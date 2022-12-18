@@ -36,7 +36,7 @@ header details ul {
     position: absolute;
     top: 50px;
     right: -35px;
-    width: 110px;
+    width: 130px;
     background-color: #f28d00;
     border-radius: 10px;
     text-align: center;
@@ -47,22 +47,26 @@ header details ul li {
     margin: 15px 10px;
 }
 
+#logout {
+    border-bottom: solid #fff 2px;
+}
 /* -----header */
 
 
 /* メッセージ表示箇所 */
 #output {
     width: 100vw;
-    height: calc(100vh - 170px);
+    height: calc(100vh - 180px);
     overflow: scroll;
 }
 
 #output li{
-    margin: 10px 0;
+    margin-bottom: 10px;
 }
 
     /* メッセージCSS */
 
+    /* 相手の名前 */
     .userName {
         text-align: left;
         margin-left: 10px;
@@ -101,10 +105,26 @@ header details ul li {
 
     .time {
         margin: 0 10px;
-        font-size: 14px;
+        font-size: 15px;
     }
 
     /* 本検索メッセージ */
+    #bookWord {
+        border: solid #fff 1px;
+        border-radius: 15px 0 0 15px;
+        padding: 5px 10px;
+        margin-top: 10px;
+        font-size: 15px;
+    }
+    #searchBook{
+        font-size: 15px;
+        font-family: 'Open Sans', 'Kosugi Maru', sans-serif;
+        border-radius: 0px 15px 15px 0px;
+        background-color: #ffd683;
+        border: solid #fff 3px;
+        margin-left: 5px;
+        padding: 2px 5px;
+    }
     .BList {
         margin-top: 5px;
         margin-left: 20px;
@@ -121,9 +141,20 @@ header details ul li {
 
 
 /* 送信部分 */
+#send-wrapper {
+    background-color: #f25c00;
+    height: 100px;
+}
+
+#name {
+    color: #f25c00;
+    background-color: #f25c00;
+    padding: 5px;
+    /* display: none; */
+}
 
 #send-area {
-    height: 90px;
+    /* height: 90px; */
     display: flex;
     align-items: flex-start;
     align-items: center;
@@ -131,6 +162,77 @@ header details ul li {
 }
     /* メニュー部分 */
     #menu {
+        margin-left: 10px;
+        position: relative;
+    }
+
+    #menu summary {
+        display: block;
+        padding: 2px;
+        border-radius: 50%;
+        border:solid #fff 1px;
+        font-size: 23px;
+        color: #fff;
+    }
+    #menu summary::-webkit-details-marker {
+        display: none;
+    }
+
+    #menu ul{
+        background-color: #f7efe2;
+        position: absolute;
+        left: -5px;
+        bottom: 63px;
+        border-radius: 10px;
+    }
+
+    #menu li{
+        display: block;
+        width: 100px;
+        padding: 5px;
+        margin: 5px;
+    }
+    /* ------メニュー部分 */
+
+
+#input {
+    width: 250px;
+    border-radius: 20px;
+    margin-left: 10px;
+    padding: 5px 10px;
+    font-size: 18px;
+    border-style: none;
+    /* textareaの拡大縮小禁止 */
+    resize: none;
+}
+
+#send {
+    height: 40px;
+    width: 40px;
+    margin-left: 10px;
+    background-color: #f25c00;
+    border-style: none;
+    border-radius: 50%;
+}
+
+#send img {
+    height: 40px;
+    border-radius: 50%;
+}
+
+
+
+
+/* 旧CSS */
+/* #send-area {
+    height: 90px;
+    display: flex;
+    align-items: flex-start;
+    align-items: center;
+    background-color: #f25c00;
+} */
+    /* メニュー部分 */
+    /* #menu {
         margin-left: 10px;
         position: relative;
     }
@@ -160,23 +262,23 @@ header details ul li {
         width: 100px;
         padding: 5px;
         margin: 5px;
-    }
+    } */
     /* ------メニュー部分 */
 
 
 
-#input {
+/* #input {
     width: 250px;
     border-radius: 20px;
     margin-left: 10px;
     padding: 5px 10px;
     font-size: 18px;
-    border-style: none;
+    border-style: none; */
     /* textareaの拡大縮小禁止 */
-    resize: none;
-}
+    /* resize: none;
+} */
 
-#send {
+/* #send {
     height: 40px;
     width: 40px;
     margin-left: 10px;
@@ -188,5 +290,5 @@ header details ul li {
 #send img {
     height: 40px;
     border-radius: 50%;
-}
+} */
 /* -----送信部分 */
