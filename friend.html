@@ -236,7 +236,7 @@
                 // const msgElement = `<p class=userName>${msg.uname}</p><p class=right_balloon>${msg.text}</p>`;
                 // const msgElement = `<div class=myBalloon><p class=userName>${msg.uname}<img src=${msg.icon} class=outputIcon></p><p class=right_balloon>${msg.text}</p></div>`;
 
-                const msgElement = `<li class=liRight><div class=rightMsg>${msg.text}</div><p class=time>${msg.date.month}/${msg.date.date}　${msg.date.hour}:${msg.date.minute} <button class="remove">×<div id=msgKey>${data.key}</div></button></p></li>`;
+                const msgElement = `<li class=liRight><div class=rightMsg>${msg.text}</div><p class=time>${msg.date.month}/${msg.date.date}　${msg.date.hour}:${msg.date.minute} <button class="remove" id=${data.key}>×</button></p></li>`;
                 $("#output").append(msgElement);
             }else{
                 const msgElement = `<li class=liLeft><div class=userName>${msg.name}</div><div class=leftMsg>${msg.text}</div><p class=time>${msg.date.month}/${msg.date.date}　${msg.date.hour}:${msg.date.minute}</p></li>`;
@@ -245,16 +245,16 @@
 
             // 自動スクロール
             $("#output")[0].scrollTop = $("#output")[0].scrollHeight;
-        
-            $(".remove").on('click', function(){
-                const son = $(this).children();
-                const text = (son).text();
-                console.log(text);
-                // const deleteDB = (text) => {
-                //     db.ref("users/chat/" + text).remove();
-                // }
-            });
 
+        });
+
+        // メッセージの削除ボタン
+        // documentを使うことで、あとから追加した要素を発火させてもイベントが発生
+        $(document).on('click', '.remove', function(){
+            const value = $(this).attr("id");
+            const dbRefDel = ref(db, `users/chat/${value}`);
+            remove(dbRefDel);
+            $(this).parent().parent().remove();
         });
         
     });

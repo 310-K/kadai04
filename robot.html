@@ -44,7 +44,7 @@
                 <li>実装予定②</li>
             </ul>
         </details>
-        <textarea name="" id="input" cols="" rows="1"></textarea>
+        <textarea name="" id="input" cols="" rows="1" required></textarea>
         <button id="send">
             <img src="./imgs/send-btn.jpg" alt="送信ボタン">
         </button>
@@ -199,11 +199,20 @@
         onChildAdded(dbRef, function(data){
             const msg = data.val();
             console.log(msg);
-            const msgElement = `<li class=liRight><div class=rightMsg>${msg.text}</div><p class=time>${msg.date.month}/${msg.date.date}　${msg.date.hour}:${msg.date.minute}</p></li>`;
+            const msgElement = `<li class=liRight><div class=rightMsg>${msg.text}</div><p class=time>${msg.date.month}/${msg.date.date}　${msg.date.hour}:${msg.date.minute} <button class="remove" id=${data.key}>×</button></p></li>`;
             $("#output").append(msgElement);
 
             // 自動スクロール
             $("#output")[0].scrollTop = $("#output")[0].scrollHeight;
+        });
+
+        // メッセージの削除ボタン
+        // documentを使うことで、あとから追加した要素を発火させてもイベントが発生
+        $(document).on('click', '.remove', function(){
+            const value = $(this).attr("id");
+            const dbRefDel = ref(db, `users/${uid}/robot/${value}`);
+            remove(dbRefDel);
+            $(this).parent().parent().remove();
         });
 
     });

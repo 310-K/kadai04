@@ -103,16 +103,19 @@ header details ul li {
 
     .remove {
         color: #fff;
-        font-size: 15px;
+        font-size: 16px;
         background-color: #f25c00;
         margin-left: 5px;
+        width: 20px;
+        height: 20px;
         border-radius: 50%;
         border:solid #fff 1px;
+        padding: 0;
     }
 
-    #msgKey {
+    /* #msgKey {
         display: none;
-    }
+    } */
 
     /* 本検索メッセージ */
     #bookWord {
@@ -226,7 +229,7 @@ header details ul li {
     margin-left: 10px;
     background-color: #f25c00;
     border-style: none;
-    border-radius: 50%;
+    /* border-radius: 50%; */
 }
 
 #send img {
